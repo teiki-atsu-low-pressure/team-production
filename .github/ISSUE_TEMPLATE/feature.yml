@@ -1,0 +1,33 @@
+name: 機能追加・変更
+description: 新しい機能の追加、または既存機能の変更
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 目的
+      description: なぜこの機能が必要か
+    validations:
+      required: true
+  - type: textarea
+    id: todo
+    attributes:
+      label: やること
+      description: 作業内容をチェックリストで書く
+      value: |
+        - [ ] 
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+      description: 何ができたら完了か
+    validations:
+      required: true
+  - type: textarea
+    id: note
+    attributes:
+      label: 備考
+      description: 参考リンク、Discord での議論など

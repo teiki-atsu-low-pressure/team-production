@@ -4,12 +4,5 @@
 
 ## 開発に参加する前に
 
-[開発ルール（docs/RULE.md）](docs/RULE.md) を必ず読むこと。
-
-## ドキュメント一覧
-
-ドキュメントは `docs/` にまとめる。追加したら、この一覧にも追記すること。
-
-| ドキュメント | 内容 |
-|---|---|
-| [docs/RULE.md](docs/RULE.md) | 開発ルール（ブランチ、コミット、Issue・PR、レビュー） |
+[開発ルール（docs/README.md）](docs/README.md) を必ず読むこと。
+ドキュメントは `docs/` にまとめ、目次は [docs/README.md](docs/README.md) にある。

@@ -9,7 +9,7 @@
 | [開発フロー](development-flow.md) | 全体の流れ、`develop` の取り込み、コンフリクト対応、用語 |
 | [Issue・PR・レビュー](issue-pr.md) | Issue の立て方、PR の書き方、レビューのルール、Draft PR |
 | [ブランチ戦略](branch-strategy.md) | ブランチの種類と命名、リリースとタグ |
-| [コミット戦略](commit-strategy.md) | コミットメッセージ規約、コミットしてはいけないもの |
+| [コミット戦略](commit-strategy.md) | コミットメッセージの書き方、コミットの粒度、コミットしてはいけないもの |
 | [AI を使うときのルール](ai-rules.md) | Claude Code などを使うときの注意 |
 
 ドキュメントを追加したら、この目次と、リポジトリ直下の `CLAUDE.md` にも追記すること。

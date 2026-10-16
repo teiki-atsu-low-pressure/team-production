@@ -1,0 +1,18 @@
+# 秘密情報（.env.example はサンプルなのでコミットしてよい）
+.env
+.env.*
+!.env.example
+
+# OS が自動で作るファイル
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 個人用の設定
+.claude/settings.local.json
+CLAUDE.local.md
+
+# 依存パッケージ
+node_modules/
+
+# 言語・フレームワークが決まったら、ここに追記する

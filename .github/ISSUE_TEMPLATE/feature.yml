@@ -1,0 +1,36 @@
+name: 機能追加・変更
+description: 新しい機能の追加、または既存機能の変更
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: 立てるときは「概要」だけでよい。「目的」「やること」「完了条件」は、着手するときに担当者が書き足す。
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何をしたいか（ざっくりでよい）
+    validations:
+      required: true
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 目的
+      description: なぜこの機能が必要か
+  - type: textarea
+    id: todo
+    attributes:
+      label: やること
+      description: 作業内容をチェックリストで書く
+      value: |
+        - [ ] 
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+      description: 何ができたら完了か
+  - type: textarea
+    id: note
+    attributes:
+      label: 備考
+      description: 参考リンク、Discord での議論など

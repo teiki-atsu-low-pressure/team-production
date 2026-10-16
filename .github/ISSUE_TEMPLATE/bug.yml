@@ -3,11 +3,14 @@ description: 不具合の報告
 title: "[fix] "
 labels: ["bug"]
 body:
+  - type: markdown
+    attributes:
+      value: 立てるときは「概要」だけでよい。わかる範囲で他の欄も書く。
   - type: textarea
     id: summary
     attributes:
       label: 概要
-      description: 何が起きているか
+      description: 何が起きているか（ざっくりでよい）
     validations:
       required: true
   - type: textarea
@@ -17,14 +20,15 @@ body:
       value: |
         1. 
         2. 
-    validations:
-      required: true
   - type: textarea
     id: expected
     attributes:
       label: 期待する動作
-    validations:
-      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+      description: 着手するときに担当者が書き足す
   - type: textarea
     id: note
     attributes:

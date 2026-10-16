@@ -1,16 +1,87 @@
 # ブランチ戦略
 
-## ブランチの種類
+このドキュメントでは、ブランチの種類と命名、マージとリリースの方法を定義する。
+全員が同じルールでブランチを扱い、安心して並行作業できるようにすることが目的。
 
-| ブランチ名 | 用途 |
+## メインブランチ（`main`）
+
+- 安定版。発表・デモで使える状態を常に保つ
+- `develop` からのリリース PR でのみ更新する（[リリース](#リリースdevelop--main)を参照）
+
+## 開発ブランチ（`develop`）
+
+- 開発の統合先（デフォルトブランチ）
+- 作業ブランチはここから切り、ここへ PR を出してマージする
+
+## 作業ブランチ
+
+### 命名規則
+
+```
+<type>/<スコープ>/<Issue番号>-<説明>
+```
+
+- `<スコープ>/` は、特定の領域だけを触る場合に付ける（全体に関わる場合・構成が決まっていない間は省略）
+- `<Issue番号>-` は、Issue がある場合に付ける
+
+| スコープ | Issue | 例 |
+|---|---|---|
+| あり | あり | `feat/frontend/12-login-form` |
+| あり | なし | `refactor/frontend/split-header` |
+| なし | あり | `chore/15-setup-eslint` |
+| なし | なし | `docs/update-readme` |
+
+- 英小文字・数字・ハイフンのみ使用する
+- `<説明>` は **英語 2〜4 単語程度** で、何をするかを書く（例: `login-form`、`db-connection`）。ローマ字は使わない
+- 作業の途中で種類が変わっても、ブランチ名は変えなくてよい（PR タイトルとコミットの type で正しく表す）
+
+### 種類
+
+`<type>` は[コミットの type](commit-strategy.md#type-一覧)と同じものを使い、**その PR の主な目的** で決める。
+ブランチ内のコミットの type は一致しなくてよい（例: `feat/frontend/12-login-form` の中に `test:` のコミットがあってよい）。
+
+| type | 目的 | 命名例 |
+|---|---|---|
+| `feat` | 新しい機能の追加 | `feat/frontend/12-login-form` |
+| `fix` | バグの修正 | `fix/backend/34-db-connection` |
+| `change` | 既存機能の仕様・見た目・動きの変更 | `change/frontend/41-header-layout` |
+| `refactor` | 動きを変えないコードの整理 | `refactor/backend/52-split-user-service` |
+| `docs` | ドキュメントのみの変更 | `docs/update-readme` |
+| `test` | テストの追加・修正 | `test/backend/60-login-api-tests` |
+| `chore` | 設定・ツール・依存関係・CI などの雑務 | `chore/15-setup-eslint` |
+
+- マージ先はすべて `develop`
+- type に迷ったら「[feat / change / fix / refactor の見分け方](commit-strategy.md#feat--change--fix--refactor-の見分け方)」を参照
+
+### スコープ
+
+| スコープ | 対象 |
 |---|---|
-| `main` | 安定版。発表・デモで使う状態を保つ。`develop` からのリリース PR でのみ更新する |
-| `develop` | 開発の統合先（デフォルトブランチ）。作業ブランチはここから切り、ここへ PR を出す |
-| `<type>/<Issue番号>-<説明>` | Issue がある作業ブランチ |
-| `<type>/<説明>` | Issue がない作業ブランチ |
+| `frontend` | 画面・クライアント側 |
+| `backend` | サーバー・API・DB |
 
-`<type>` は[コミットメッセージの type 一覧](commit-strategy.md#type-一覧)と同じものを使い、**その PR の主な目的** で決める。
-ブランチ内のコミットの type は一致しなくてよい（例: `feat/12-google-oauth` の中に `test:` や `docs:` のコミットがあってよい）。
+- ※ 仮の一覧。プロジェクトの構成が決まったら確定させる
+- コミットメッセージの scope にも同じ一覧を使う
+- frontend と backend の両方を触る作業は、できるだけ Issue を分けて別々のブランチにする。どうしても分けられないときはスコープなしにする
+（ログイン機能など、フロントとバック両方の変更が必要なもの）
+
+### その他のルール
+
+- 1 ブランチ = 1 目的（複数の変更を混在させない）。大きさの目安は「[粒度の目安](issue-pr.md#粒度の目安)」を参照
+- 個人用の作業ブランチ（例: `daiki-work`）は作らない
+- GitHub が自動で作るブランチ（Revert ボタンで作られる `revert-...` など）は命名規則の対象外とする
+
+## マージ
+
+- `main` / `develop` への直接プッシュは禁止
+- 必要な承認（Approve）の数（自分の PR は自分で承認できない）
+  - `develop` への PR：1 人以上
+  - `main` への PR：2 人以上
+- ※ 上記と `main` / `develop` の削除・force push 禁止は、GitHub の Ruleset（`protect-main` / `protect-develop`）で強制されている
+- マージ方法は **Merge commit のみ**（Squash / Rebase は GitHub の設定で無効化済み）
+  - PR 内のコミットはすべて履歴に残るので、PR を出す前に意味のないコミット（`wip`、`修正` だけ等）がないか見直す
+  - PR 単位の流れだけ見たいときは `git log --first-parent develop` を使う
+- マージ後、GitHub 上の作業ブランチは自動で削除される（ローカルの掃除は[開発フロー](development-flow.md#全体の流れ)を参照）
 
 ## リリース（`develop` → `main`）
 
@@ -42,24 +113,3 @@
 
 - タグ名は英数字のみにする（日本語はタイトルに書く）
 - 過去のリリースの状態は、`git switch --detach v0.1` で見られる（見終わったら `git switch develop` で戻る）
-
-## 命名規則
-
-- 英小文字・数字・ハイフンのみ使用する（`<説明>` は kebab-case）
-- 例:
-  - `feat/12-google-oauth`
-  - `fix/34-cache-race-condition`
-  - `docs/update-readme`（Issue なし）
-
-## ルール
-
-- `main` / `develop` への直接プッシュは禁止
-- 必要な承認（Approve）の数（自分の PR は自分で承認できない）
-  - `develop` への PR：1 人以上
-  - `main` への PR：2 人以上
-- ※ 上記と `main` / `develop` の削除・force push 禁止は、GitHub の Ruleset（`protect-main` / `protect-develop`）で強制されている
-- マージ方法は **Merge commit のみ**（Squash / Rebase は GitHub の設定で無効化済み）
-  - PR 内のコミットはすべて履歴に残るので、PR を出す前に意味のないコミット（`wip`、`修正` だけ等）がないか見直す
-  - PR 単位の流れだけ見たいときは `git log --first-parent develop` を使う
-- 1 ブランチ = 1 目的（複数の変更を混在させない）
-- 個人用の作業ブランチ（例: `daiki-work`）は作らない

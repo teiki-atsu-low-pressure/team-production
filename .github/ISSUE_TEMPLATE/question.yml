@@ -1,6 +1,5 @@
 name: ざっくり相談・気づき
 description: 「なんかおかしい？」「こうしたほうがよくない？」など、まだ整理できていないこと
-title: "[相談] "
 labels: ["question"]
 body:
   - type: textarea

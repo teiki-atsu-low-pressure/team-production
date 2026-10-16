@@ -1,6 +1,5 @@
 name: 機能追加・変更
 description: 新しい機能の追加、または既存機能の変更
-title: "[feat] "
 labels: ["enhancement"]
 body:
   - type: markdown

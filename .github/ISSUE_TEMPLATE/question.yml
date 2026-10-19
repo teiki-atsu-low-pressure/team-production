@@ -1,0 +1,11 @@
+name: ざっくり相談・気づき
+description: 「なんかおかしい？」「こうしたほうがよくない？」など、まだ整理できていないこと
+labels: ["question"]
+body:
+  - type: textarea
+    id: content
+    attributes:
+      label: 内容
+      description: 一言でよい（例:「DB の接続なんか悪くない？」）
+    validations:
+      required: true

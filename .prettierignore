@@ -1,0 +1,12 @@
+# 自動生成されるファイル
+package-lock.json
+.next/
+out/
+build/
+next-env.d.ts
+
+# Markdown は整形しない（docs/ の表などが書き換わり、無関係な差分が出るため）
+*.md
+
+# Issue テンプレートは行末の空白に意味があるため整形しない（「- [ ] 」の後ろにそのまま入力できるようにしている）
+.github/ISSUE_TEMPLATE/

@@ -45,4 +45,5 @@ npm run dev
 |---|---|
 | `npm run dev` | 開発サーバーを起動する（保存すると画面が自動で更新される） |
 | `npm run lint` | コードの書き方をチェックする（PR を出す前に実行する） |
+| `npm run format` | コードの書式を Prettier でそろえる（VS Code では保存時に自動で実行される） |
 | `npm run build` | 本番用にビルドする（ビルドが通るかの確認に使う） |

@@ -1,8 +1,8 @@
-export default function LoginPage() {
+export default function StudyPage() {
   return (
-    <main style={{ padding: "40px", textAlign: "center" }}>
-      <h1>ログイン・GitHub連携画面</h1>
-      <p>ここでGoogleアカウントやGitHubと連携します！</p>
+    <main style={{ padding: "2rem" }}>
+      <h1>学習コンテンツ画面</h1>
+      <p>ここに用語集や学習コンテンツを表示します</p>
     </main>
   );
 }

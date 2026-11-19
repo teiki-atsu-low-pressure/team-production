@@ -14,6 +14,15 @@ if (!url || !secretKey) {
   process.exit(1);
 }
 
+// 管理画面の「API URL」をそのまま貼ると末尾に /rest/v1 が付き、接続に失敗する
+if (!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(url)) {
+  console.error(
+    "NG: SUPABASE_URL の形が正しくありません。https://xxxx.supabase.co の形にしてください",
+  );
+  console.error("  末尾に /rest/v1 や / が付いている場合は削ってください");
+  process.exit(1);
+}
+
 const supabase = createClient(url, secretKey);
 
 /** 失敗した手順と原因を表示して終了する */

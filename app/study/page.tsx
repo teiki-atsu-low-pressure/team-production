@@ -11,10 +11,15 @@ type Term = {
   category: Category;
   description: string;
   points: string[];
-  related: string[];
+  relatedIds: string[];
 };
 
-const CATEGORIES: Category[] = ["GitHub", "ターミナル", "Gitコマンド", "その他"];
+const CATEGORIES: Category[] = [
+  "GitHub",
+  "ターミナル",
+  "Gitコマンド",
+  "その他",
+];
 
 const TERMS: Term[] = [
   {
@@ -28,7 +33,7 @@ const TERMS: Term[] = [
       "プルリクエストで変更を提案できる",
       "学習や開発に幅広く使われている",
     ],
-    related: ["リポジトリ", "プルリクエスト (PR)", "イシュー"],
+    relatedIds: ["repository", "pr", "issue"],
   },
   {
     id: "repository",
@@ -40,7 +45,7 @@ const TERMS: Term[] = [
       "自分のPCにある「ローカルリポジトリ」と、GitHub上の「リモートリポジトリ」がある",
       "プロジェクトごとに1つのリポジトリを作るのが基本",
     ],
-    related: ["GitHub", "コミット", "フォーク"],
+    relatedIds: ["github", "commit", "fork"],
   },
   {
     id: "commit",
@@ -52,7 +57,7 @@ const TERMS: Term[] = [
       "セーブポイントを作るイメージで記録を残せる",
       "「何を変更したか」のメッセージを添えて記録する",
     ],
-    related: ["リポジトリ", "ブランチ"],
+    relatedIds: ["repository", "branch"],
   },
   {
     id: "pr",
@@ -64,7 +69,7 @@ const TERMS: Term[] = [
       "取り込む前に他のメンバーにコードを確認（レビュー）してもらえる",
       "チーム開発でのバグやミスを防ぐために使われる",
     ],
-    related: ["GitHub", "ブランチ", "マージ"],
+    relatedIds: ["github", "branch", "merge"],
   },
   {
     id: "issue",
@@ -76,7 +81,7 @@ const TERMS: Term[] = [
       "誰がどの作業を担当するかを明確にできる",
       "番号（#23など）で管理され、プルリクエストと紐づけられる",
     ],
-    related: ["GitHub", "プルリクエスト (PR)"],
+    relatedIds: ["github", "pr"],
   },
   {
     id: "branch",
@@ -88,7 +93,7 @@ const TERMS: Term[] = [
       "機能追加や修正ごとにブランチを分けて並行作業できる",
       "作業が終わったら元のブランチへ合流（マージ）させる",
     ],
-    related: ["コミット", "マージ", "プルリクエスト (PR)"],
+    relatedIds: ["commit", "merge", "pr"],
   },
   {
     id: "merge",
@@ -100,7 +105,7 @@ const TERMS: Term[] = [
       "プルリクエストが承認された後に行うのが一般的",
       "同じ箇所を複数人が編集していると競合（コンフリクト）が起きることがある",
     ],
-    related: ["ブランチ", "プルリクエスト (PR)"],
+    relatedIds: ["branch", "pr"],
   },
   {
     id: "fork",
@@ -112,7 +117,7 @@ const TERMS: Term[] = [
       "元のリポジトリを壊す心配なく自由に改造・練習できる",
       "変更した内容を元のリポジトリへプルリクエストで送ることもできる",
     ],
-    related: ["GitHub", "リポジトリ"],
+    relatedIds: ["github", "repository"],
   },
   {
     id: "terminal-cd",
@@ -120,7 +125,7 @@ const TERMS: Term[] = [
     category: "ターミナル",
     description: "作業するフォルダ（ディレクトリ）を移動するコマンドです。",
     points: ["cd フォルダ名 で中に入る", "cd .. で1つ上の階層に戻る"],
-    related: ["GitHub"],
+    relatedIds: ["cmd-push"],
   },
   {
     id: "cmd-push",
@@ -129,7 +134,7 @@ const TERMS: Term[] = [
     description:
       "ローカルでコミットした変更をGitHubへアップロードするコマンドです。",
     points: ["チームメンバーと変更を共有するために必須の操作"],
-    related: ["コミット", "GitHub"],
+    relatedIds: ["commit", "github"],
   },
   {
     id: "other-readme",
@@ -137,7 +142,7 @@ const TERMS: Term[] = [
     category: "その他",
     description: "リポジトリの説明書となるマークダウンファイルです。",
     points: ["プロジェクトの概要や起動方法を書いておく"],
-    related: ["リポジトリ"],
+    relatedIds: ["repository"],
   },
 ];
 
@@ -146,24 +151,23 @@ export default function StudyPage() {
   const [selectedId, setSelectedId] = useState<string>("github");
   const [searchText, setSearchText] = useState<string>("");
 
-  // カテゴリと検索ワードで絞り込み
-  const filteredTerms = TERMS.filter((term) => {
-    const matchCategory = term.category === selectedCategory;
-    const matchSearch =
-      searchText === "" ||
-      term.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      term.description.includes(searchText);
-    return matchCategory && matchSearch;
-  });
+  const keyword = searchText.trim().toLowerCase();
 
-  // 現在表示する用語詳細
+  // 検索中は全カテゴリから探し、未入力時は選択中のカテゴリで絞り込む
+  const filteredTerms = TERMS.filter((term) =>
+    keyword === ""
+      ? term.category === selectedCategory
+      : term.name.toLowerCase().includes(keyword) ||
+        term.description.toLowerCase().includes(keyword),
+  );
+
+  // 右側の詳細は絞り込み結果の中から選ぶ（0件のときは undefined）
   const currentTerm =
-    TERMS.find((term) => term.id === selectedId) ??
-    filteredTerms[0] ??
-    TERMS[0];
+    filteredTerms.find((term) => term.id === selectedId) ?? filteredTerms[0];
 
   const handleSelectCategory = (category: Category) => {
     setSelectedCategory(category);
+    setSearchText("");
     const firstTerm = TERMS.find((t) => t.category === category);
     if (firstTerm) {
       setSelectedId(firstTerm.id);
@@ -174,13 +178,15 @@ export default function StudyPage() {
     <div
       style={{
         minHeight: "100vh",
-        // ▼ 背景画像が来たら下の background に url('/images/背景ファイル名') を足すだけでOK
-        background: "linear-gradient(135deg, #dce8fc 0%, #eef4ff 50%, #d8e5fb 100%)",
+        // ▼ 背景画像が来たら下の background に url('/images/背景ファイル名') を足す
+        background:
+          "linear-gradient(135deg, #dce8fc 0%, #eef4ff 50%, #d8e5fb 100%)",
         color: "#1e3a8a",
-        fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif",
+        fontFamily:
+          "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif",
       }}
     >
-      {/* 上部ヘッダー */}
+      {/* 共通レイアウトが完成したら共通ヘッダーに置き換える */}
       <header
         style={{
           display: "flex",
@@ -193,7 +199,9 @@ export default function StudyPage() {
         }}
       >
         <div>
-          <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#2b50b5" }}>
+          <div
+            style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#2b50b5" }}
+          >
             GitBuddy
           </div>
           <div style={{ fontSize: "0.75rem", color: "#5b76b8" }}>
@@ -201,12 +209,25 @@ export default function StudyPage() {
           </div>
         </div>
 
-        <nav style={{ display: "flex", gap: "2rem", fontSize: "0.95rem", fontWeight: "bold" }}>
+        <nav
+          style={{
+            display: "flex",
+            gap: "2rem",
+            fontSize: "0.95rem",
+            fontWeight: "bold",
+          }}
+        >
           <Link href="/" style={{ color: "#4a65a8", textDecoration: "none" }}>
             ホーム
           </Link>
           <Link
             href="/quest/1"
+            style={{ color: "#4a65a8", textDecoration: "none" }}
+          >
+            クエスト
+          </Link>
+          <Link
+            href="/study"
             style={{
               color: "#2b50b5",
               textDecoration: "none",
@@ -214,12 +235,18 @@ export default function StudyPage() {
               paddingBottom: "0.25rem",
             }}
           >
-            クエスト
+            用語集
           </Link>
-          <Link href="/login" style={{ color: "#4a65a8", textDecoration: "none" }}>
+          <Link
+            href="/login"
+            style={{ color: "#4a65a8", textDecoration: "none" }}
+          >
             マイページ
           </Link>
-          <Link href="/login" style={{ color: "#4a65a8", textDecoration: "none" }}>
+          <Link
+            href="/login"
+            style={{ color: "#4a65a8", textDecoration: "none" }}
+          >
             設定
           </Link>
         </nav>
@@ -247,7 +274,9 @@ export default function StudyPage() {
       >
         {/* 左サイドメニュー */}
         <aside style={{ width: "160px", flexShrink: 0 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+          >
             <div
               style={{
                 padding: "0.65rem 1rem",
@@ -298,10 +327,23 @@ export default function StudyPage() {
             }}
           >
             <div>
-              <h1 style={{ fontSize: "1.4rem", fontWeight: "bold", margin: 0, color: "#23439c" }}>
+              <h1
+                style={{
+                  fontSize: "1.4rem",
+                  fontWeight: "bold",
+                  margin: 0,
+                  color: "#23439c",
+                }}
+              >
                 GitHub・ターミナル用語集
               </h1>
-              <p style={{ fontSize: "0.85rem", margin: "0.25rem 0 0", color: "#5b76b8" }}>
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  margin: "0.25rem 0 0",
+                  color: "#5b76b8",
+                }}
+              >
                 Gitやターミナルの基本用語を、わかりやすく解説！
               </p>
             </div>
@@ -326,9 +368,17 @@ export default function StudyPage() {
           </div>
 
           {/* カテゴリタブ */}
-          <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "0.75rem",
+              marginBottom: "1.5rem",
+              flexWrap: "wrap",
+            }}
+          >
             {CATEGORIES.map((category) => {
-              const isSelected = selectedCategory === category;
+              const isSelected =
+                keyword === "" && selectedCategory === category;
               return (
                 <button
                   key={category}
@@ -337,7 +387,9 @@ export default function StudyPage() {
                   style={{
                     padding: "0.55rem 1.4rem",
                     borderRadius: "9999px",
-                    border: isSelected ? "none" : "1px solid rgba(255, 255, 255, 0.9)",
+                    border: isSelected
+                      ? "none"
+                      : "1px solid rgba(255, 255, 255, 0.9)",
                     background: isSelected
                       ? "linear-gradient(90deg, #5c85ee 0%, #7ba1f7 100%)"
                       : "rgba(255, 255, 255, 0.7)",
@@ -380,12 +432,19 @@ export default function StudyPage() {
               }}
             >
               {filteredTerms.length === 0 ? (
-                <p style={{ padding: "1rem", fontSize: "0.9rem", color: "#5b76b8" }}>
+                <p
+                  style={{
+                    padding: "1rem",
+                    fontSize: "0.9rem",
+                    color: "#5b76b8",
+                    margin: 0,
+                  }}
+                >
                   該当する用語がありません
                 </p>
               ) : (
                 filteredTerms.map((term) => {
-                  const isActive = term.id === currentTerm.id;
+                  const isActive = currentTerm?.id === term.id;
                   return (
                     <button
                       key={term.id}
@@ -398,8 +457,12 @@ export default function StudyPage() {
                         width: "100%",
                         padding: "0.8rem 1rem",
                         borderRadius: "10px",
-                        border: isActive ? "1px solid #93b4fc" : "1px solid transparent",
-                        backgroundColor: isActive ? "#e6efff" : "rgba(255, 255, 255, 0.85)",
+                        border: isActive
+                          ? "1px solid #93b4fc"
+                          : "1px solid transparent",
+                        backgroundColor: isActive
+                          ? "#e6efff"
+                          : "rgba(255, 255, 255, 0.85)",
                         color: "#23439c",
                         fontWeight: "bold",
                         fontSize: "0.95rem",
@@ -427,130 +490,158 @@ export default function StudyPage() {
                 boxShadow: "0 8px 24px rgba(30, 58, 138, 0.08)",
               }}
             >
-              {/* 用語タイトル＋カテゴリバッジ */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "1rem",
-                }}
-              >
-                <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", margin: 0, color: "#1e3a8a" }}>
-                  {currentTerm.name}
-                </h2>
-                <span
+              {!currentTerm ? (
+                <p
                   style={{
-                    padding: "0.25rem 0.85rem",
-                    borderRadius: "9999px",
-                    backgroundColor: "#e6efff",
-                    color: "#4e78e8",
-                    fontSize: "0.8rem",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {currentTerm.category}
-                </span>
-              </div>
-
-              {/* 説明文 */}
-              <p
-                style={{
-                  fontSize: "0.95rem",
-                  lineHeight: "1.7",
-                  color: "#334e8c",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                {currentTerm.description}
-              </p>
-
-              {/* ポイント枠 */}
-              <div
-                style={{
-                  backgroundColor: "#f4f8ff",
-                  borderRadius: "12px",
-                  padding: "1rem 1.25rem",
-                  border: "1px solid #dce8fc",
-                  marginBottom: "1.25rem",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "0.9rem",
-                    fontWeight: "bold",
-                    color: "#2b50b5",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  💡 ポイント
-                </div>
-                <ul
-                  style={{
+                    padding: "2rem 1rem",
+                    fontSize: "0.95rem",
+                    color: "#5b76b8",
                     margin: 0,
-                    paddingLeft: "1.2rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.4rem",
-                    fontSize: "0.9rem",
-                    color: "#334e8c",
                   }}
                 >
-                  {currentTerm.points.map((point, index) => (
-                    <li key={index}>{point}</li>
-                  ))}
-                </ul>
-              </div>
+                  該当する用語が見つかりませんでした。別のキーワードで検索してみてください。
+                </p>
+              ) : (
+                <>
+                  {/* 用語タイトル＋カテゴリバッジ */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    <h2
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "bold",
+                        margin: 0,
+                        color: "#1e3a8a",
+                      }}
+                    >
+                      {currentTerm.name}
+                    </h2>
+                    <span
+                      style={{
+                        padding: "0.25rem 0.85rem",
+                        borderRadius: "9999px",
+                        backgroundColor: "#e6efff",
+                        color: "#4e78e8",
+                        fontSize: "0.8rem",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {currentTerm.category}
+                    </span>
+                  </div>
 
-              {/* 関連する用語枠 */}
-              <div
-                style={{
-                  backgroundColor: "#f4f8ff",
-                  borderRadius: "12px",
-                  padding: "1rem 1.25rem",
-                  border: "1px solid #dce8fc",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "0.9rem",
-                    fontWeight: "bold",
-                    color: "#2b50b5",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  📖 関連する用語
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                  {currentTerm.related.map((relName) => {
-                    const target = TERMS.find((t) => t.name === relName);
-                    return (
-                      <button
-                        key={relName}
-                        type="button"
-                        onClick={() => {
-                          if (target) {
-                            setSelectedCategory(target.category);
-                            setSelectedId(target.id);
-                          }
-                        }}
-                        style={{
-                          padding: "0.35rem 0.9rem",
-                          borderRadius: "9999px",
-                          border: "1px solid #c7d8fa",
-                          backgroundColor: "#ffffff",
-                          color: "#3b66d4",
-                          fontSize: "0.85rem",
-                          fontWeight: "bold",
-                          cursor: "pointer",
-                        }}
-                      >
-                        {relName}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+                  {/* 説明文 */}
+                  <p
+                    style={{
+                      fontSize: "0.95rem",
+                      lineHeight: "1.7",
+                      color: "#334e8c",
+                      marginBottom: "1.5rem",
+                    }}
+                  >
+                    {currentTerm.description}
+                  </p>
+
+                  {/* ポイント枠 */}
+                  <div
+                    style={{
+                      backgroundColor: "#f4f8ff",
+                      borderRadius: "12px",
+                      padding: "1rem 1.25rem",
+                      border: "1px solid #dce8fc",
+                      marginBottom: "1.25rem",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "0.9rem",
+                        fontWeight: "bold",
+                        color: "#2b50b5",
+                        marginBottom: "0.6rem",
+                      }}
+                    >
+                      💡 ポイント
+                    </div>
+                    <ul
+                      style={{
+                        margin: 0,
+                        paddingLeft: "1.2rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.4rem",
+                        fontSize: "0.9rem",
+                        color: "#334e8c",
+                      }}
+                    >
+                      {currentTerm.points.map((point, index) => (
+                        <li key={index}>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 関連する用語枠 */}
+                  <div
+                    style={{
+                      backgroundColor: "#f4f8ff",
+                      borderRadius: "12px",
+                      padding: "1rem 1.25rem",
+                      border: "1px solid #dce8fc",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "0.9rem",
+                        fontWeight: "bold",
+                        color: "#2b50b5",
+                        marginBottom: "0.6rem",
+                      }}
+                    >
+                      📖 関連する用語
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.5rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {currentTerm.relatedIds.map((relId) => {
+                        const target = TERMS.find((t) => t.id === relId);
+                        if (!target) return null;
+                        return (
+                          <button
+                            key={relId}
+                            type="button"
+                            onClick={() => {
+                              setSearchText("");
+                              setSelectedCategory(target.category);
+                              setSelectedId(target.id);
+                            }}
+                            style={{
+                              padding: "0.35rem 0.9rem",
+                              borderRadius: "9999px",
+                              border: "1px solid #c7d8fa",
+                              backgroundColor: "#ffffff",
+                              color: "#3b66d4",
+                              fontSize: "0.85rem",
+                              fontWeight: "bold",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {target.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
             </article>
           </div>
 

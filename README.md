@@ -82,6 +82,7 @@ npm run dev
 | `npm run build` | 本番用にビルドする（ビルドが通るかの確認に使う） |
 | `npm run db:check` | Supabase に接続できているか確かめる |
 | `npm run quest:check -- <owner>/<repo> <クエストID>` | リポジトリがクエストを達成しているかを判定する（下を参照） |
+| `npm run repo:create -- <owner>/<テンプレート>` | テンプレートから練習用リポジトリを作る（下を参照） |
 
 ### クエストの達成判定を手元で試す
 
@@ -99,6 +100,20 @@ npm run dev
 
 - commit と push はまとめて判定する（GitHub から見えるのは push されたコミットだけのため）
 - テンプレートから作ったときの最初のコミットは数えない
+
+### 練習用リポジトリの作成を手元で試す
+
+作成の処理は [`lib/practice-repo/`](lib/practice-repo/) にある。トークンの持ち主のアカウントに、テンプレートからリポジトリを作る。
+
+1. 自分のアカウントにテンプレート用のリポジトリを作り、Settings の「Template repository」にチェックを入れる
+2. `GITHUB_TOKEN` に、リポジトリを作れるトークンを設定する（fine-grained token なら Repository access を All repositories にし、Administration を Read and write、Contents を Read-only にする）
+3. 作る
+   ```
+   npm run repo:create -- your-name/your-template --private
+   ```
+
+- リポジトリ名を省くと `gitbuddy-chapter1` になる。アプリでは public で作るが、試すときは `--private` を付けると公開リポジトリが増えない
+- 同じテンプレートから作った同じ名前のリポジトリがすでにあれば、作らずにそれを使う
 
 ## デプロイ先
 

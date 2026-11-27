@@ -6,9 +6,11 @@ export default function ClearPage() {
       style={{
         minHeight: "100vh",
         // ▼ 背景画像が共有されたら backgroundImage: "url('/images/画像名.png')" に差し替え可能
-        background: "linear-gradient(135deg, #dce8fc 0%, #eef4ff 50%, #d8e5fb 100%)",
+        background:
+          "linear-gradient(135deg, #dce8fc 0%, #eef4ff 50%, #d8e5fb 100%)",
         color: "#1e3a8a",
-        fontFamily: "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif",
+        fontFamily:
+          "'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif",
         display: "flex",
         flexDirection: "column",
       }}
@@ -26,7 +28,9 @@ export default function ClearPage() {
         }}
       >
         <div>
-          <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#2b50b5" }}>
+          <div
+            style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#2b50b5" }}
+          >
             GitBuddy
           </div>
           <div style={{ fontSize: "0.75rem", color: "#5b76b8" }}>
@@ -34,7 +38,14 @@ export default function ClearPage() {
           </div>
         </div>
 
-        <nav style={{ display: "flex", gap: "2rem", fontSize: "0.95rem", fontWeight: "bold" }}>
+        <nav
+          style={{
+            display: "flex",
+            gap: "2rem",
+            fontSize: "0.95rem",
+            fontWeight: "bold",
+          }}
+        >
           <Link href="/" style={{ color: "#4a65a8", textDecoration: "none" }}>
             ホーム
           </Link>
@@ -49,11 +60,23 @@ export default function ClearPage() {
           >
             クエスト
           </Link>
-          <Link href="/study" style={{ color: "#4a65a8", textDecoration: "none" }}>
+          <Link
+            href="/study"
+            style={{ color: "#4a65a8", textDecoration: "none" }}
+          >
             用語集
           </Link>
-          <Link href="/login" style={{ color: "#4a65a8", textDecoration: "none" }}>
+          <Link
+            href="/login"
+            style={{ color: "#4a65a8", textDecoration: "none" }}
+          >
             マイページ
+          </Link>
+          <Link
+            href="/login"
+            style={{ color: "#4a65a8", textDecoration: "none" }}
+          >
+            設定
           </Link>
         </nav>
 

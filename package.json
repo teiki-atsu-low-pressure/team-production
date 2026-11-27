@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:check": "node --env-file-if-exists=.env.local scripts/check-db.mjs",
-    "quest:check": "node --env-file-if-exists=.env.local --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-quest.ts"
+    "quest:check": "node --env-file-if-exists=.env.local --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-quest.ts",
+    "github:installation:check": "node --env-file-if-exists=.env.local scripts/check-github-installation.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.1",

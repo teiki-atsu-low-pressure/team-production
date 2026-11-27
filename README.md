@@ -81,3 +81,12 @@ npm run dev
 | `npm run format` | コードの書式を Prettier でそろえる（VS Code では保存時に自動で実行される） |
 | `npm run build` | 本番用にビルドする（ビルドが通るかの確認に使う） |
 | `npm run db:check` | Supabase に接続できているか確かめる |
+
+## デプロイ先
+
+アプリは Vercel にデプロイしている（仮のデプロイ先。あとで変える可能性がある）。
+
+- URL: https://gitbuddy-six.vercel.app
+- `develop` に PR がマージされると、自動でデプロイされて上の URL が最新になる
+- PR を出すと、Vercel のボットがその PR のプレビュー URL をコメントする。ただし、プレビューを開けるのは Vercel プロジェクトのオーナーだけ（他の人は、マージ後に上の URL で確かめる）
+- 環境変数（Supabase などのキー）は Vercel の管理画面に登録している。追加・変更が必要なときは Discord でバックエンド担当に頼む（キーをリポジトリにコミットしない）

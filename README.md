@@ -78,10 +78,20 @@ npm run dev
 |---|---|
 | `npm run dev` | 開発サーバーを起動する（保存すると画面が自動で更新される） |
 | `npm run lint` | コードの書き方をチェックする（PR を出す前に実行する） |
+| `npm run typecheck` | TypeScript の型のまちがいをチェックする |
 | `npm run format` | コードの書式を Prettier でそろえる（VS Code では保存時に自動で実行される） |
+| `npm run format:check` | 書式がそろっているかだけを確かめる（ファイルは書き換えない） |
 | `npm run build` | 本番用にビルドする（ビルドが通るかの確認に使う） |
 | `npm run db:check` | Supabase に接続できているか確かめる |
 | `npm run quest:check -- <owner>/<repo> <クエストID>` | リポジトリがクエストを達成しているかを判定する（下を参照） |
+
+### CI（自動チェック）
+
+PR を出すと、GitHub Actions が `lint`・`typecheck`・`format:check` を自動で実行する（設定は [`.github/workflows/ci.yml`](.github/workflows/ci.yml)）。
+
+- 結果は PR 画面の下のほうに表示される。✕ が付いたら「Details」から、どのチェックで失敗したかを確かめる
+- 書式チェックで失敗したら、`npm run format` を実行してコミットし直す
+- PR を出す前に、手元で同じ 3 つを実行しておくと安心
 
 ### クエストの達成判定を手元で試す
 

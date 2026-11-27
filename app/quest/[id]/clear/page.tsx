@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 export default function ClearPage() {
@@ -15,7 +13,7 @@ export default function ClearPage() {
         flexDirection: "column",
       }}
     >
-      {/* 上部ヘッダー */}
+      {/* TODO: 共通レイアウトを作る (#17) が完成したら共通ヘッダーに置き換える */}
       <header
         style={{
           display: "flex",

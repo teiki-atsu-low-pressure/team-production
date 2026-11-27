@@ -81,6 +81,24 @@ npm run dev
 | `npm run format` | コードの書式を Prettier でそろえる（VS Code では保存時に自動で実行される） |
 | `npm run build` | 本番用にビルドする（ビルドが通るかの確認に使う） |
 | `npm run db:check` | Supabase に接続できているか確かめる |
+| `npm run quest:check -- <owner>/<repo> <クエストID>` | リポジトリがクエストを達成しているかを判定する（下を参照） |
+
+### クエストの達成判定を手元で試す
+
+クエストの達成条件は [`lib/quests/`](lib/quests/) に、判定の処理は [`lib/quest-check/`](lib/quest-check/) にある。GitHub App がなくても、自分のトークンで試せる。
+
+1. GitHub の Settings → Developer settings → Fine-grained tokens で、トークンを作る
+   - Repository access: 試すリポジトリだけを選ぶ
+   - Permissions: Contents、Pull requests、Metadata を Read-only にする
+2. `.env.local` の `GITHUB_TOKEN=` の右側に貼り付ける
+3. 判定する
+   ```
+   npm run quest:check -- your-name/practice-repo chapter1-first-push
+   ```
+   条件ごとに `OK` / `NG` が表示される
+
+- commit と push はまとめて判定する（GitHub から見えるのは push されたコミットだけのため）
+- テンプレートから作ったときの最初のコミットは数えない
 
 ## デプロイ先
 
